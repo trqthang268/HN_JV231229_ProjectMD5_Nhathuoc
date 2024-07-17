@@ -35,6 +35,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
+    implementation("org.mindrot:jbcrypt:0.4")
+    // https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+    implementation 'com.google.firebase:firebase-admin:8.1.0'
 }
 
 tasks.named('test') {

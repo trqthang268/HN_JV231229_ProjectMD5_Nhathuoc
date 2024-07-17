@@ -1,0 +1,228 @@
+-- Enum definitions
+# CREATE orders_status_enum AS ENUM ('CANCEL', 'CONFIRM', 'DELIVERY', 'DENIED', 'SUCCESS', 'WAITING');
+# CREATE role_role_name_enum AS ENUM ('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER');
+create database prj_md5_jv231229;
+use prj_md5_jv231229;
+-- Table definitions
+CREATE TABLE role (
+                      id BIGINT(20) NOT NULL PRIMARY KEY,
+                      role_name varchar(50) DEFAULT NULL
+);
+
+CREATE TABLE user (
+                      id BIGINT(20) NOT NULL PRIMARY KEY,
+                      avatar VARCHAR(255) DEFAULT NULL,
+                      created_at DATE DEFAULT NULL,
+                      email VARCHAR(255) DEFAULT NULL,
+                      full_name VARCHAR(255) DEFAULT NULL,
+                      is_deleted BIT(1) NOT NULL,
+                      password VARCHAR(255) DEFAULT NULL,
+                      phone VARCHAR(255) DEFAULT NULL,
+                      point DOUBLE NOT NULL,
+                      status TINYINT(1) DEFAULT 1,
+                      updated_at DATE DEFAULT NULL,
+                      username VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE user_role (
+                           user_id BIGINT(20) NOT NULL,
+                           role_id BIGINT(20) NOT NULL,
+                           PRIMARY KEY (user_id, role_id),
+                           FOREIGN KEY (user_id) REFERENCES user(id),
+                           FOREIGN KEY (role_id) REFERENCES role(id)
+);
+
+CREATE TABLE address (
+                         id BIGINT(20) NOT NULL PRIMARY KEY,
+                         district VARCHAR(255) DEFAULT NULL,
+                         phone VARCHAR(255) DEFAULT NULL,
+                         priority BIT(1) NOT NULL,
+                         province VARCHAR(255) DEFAULT NULL,
+                         receive_name VARCHAR(255) DEFAULT NULL,
+                         street_address VARCHAR(255) DEFAULT NULL,
+                         ward VARCHAR(255) DEFAULT NULL,
+                         user_id BIGINT(20) DEFAULT NULL,
+                         FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE banner (
+                        id BIGINT(20) NOT NULL PRIMARY KEY,
+                        banner_name VARCHAR(255) DEFAULT NULL,
+                        created_at DATE DEFAULT NULL,
+                        description VARCHAR(255) DEFAULT NULL,
+                        image VARCHAR(255) DEFAULT NULL,
+                        status BIT(1) NOT NULL
+);
+
+CREATE TABLE brand (
+                       id BIGINT(20) NOT NULL PRIMARY KEY,
+                       brand_name VARCHAR(255) DEFAULT NULL,
+                       created_at DATE DEFAULT NULL,
+                       description VARCHAR(255) DEFAULT NULL,
+                       image VARCHAR(255) DEFAULT NULL,
+                       status BIT(1) NOT NULL
+);
+
+
+CREATE TABLE category (
+                          id BIGINT(20) NOT NULL PRIMARY KEY,
+                          category_name VARCHAR(255) DEFAULT NULL,
+                          created_at DATE DEFAULT NULL,
+                          description VARCHAR(255) DEFAULT NULL,
+                          image VARCHAR(255) DEFAULT NULL,
+                          status BIT(1) NOT NULL
+);
+
+
+CREATE TABLE unit (
+                       id BIGINT(20) NOT NULL PRIMARY KEY,
+                       unit_name VARCHAR(255) DEFAULT NULL,
+                       status BIT(1) NOT NULL
+);
+
+
+CREATE TABLE coupons (
+                         id BIGINT(20) NOT NULL PRIMARY KEY,
+                         code VARCHAR(255) DEFAULT NULL,
+                         discount VARCHAR(255) DEFAULT NULL,
+                         end_date DATE DEFAULT NULL,
+                         quantity INT(11) NOT NULL,
+                         start_date DATE DEFAULT NULL,
+                         status BIT(1) NOT NULL,
+                         title VARCHAR(255) DEFAULT NULL
+);
+
+
+CREATE TABLE product (
+                         id BIGINT(20) NOT NULL PRIMARY KEY,
+                         created_at DATE DEFAULT NULL,
+                         description VARCHAR(255) DEFAULT NULL,
+                         image VARCHAR(255) DEFAULT NULL,
+                         product_name VARCHAR(255) DEFAULT NULL,
+                         sku VARCHAR(255) DEFAULT NULL,
+                         status BIT(1) NOT NULL,
+                         updated_at DATE DEFAULT NULL,
+                         brand_id BIGINT(20) DEFAULT NULL,
+                         category_id BIGINT(20) DEFAULT NULL,
+                         FOREIGN KEY (brand_id) REFERENCES brand(id),
+                         FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+CREATE TABLE product_detail (
+                                id BIGINT(20) NOT NULL PRIMARY KEY,
+                                image VARCHAR(255) DEFAULT NULL,
+                                product_detail_name VARCHAR(255) DEFAULT NULL,
+                                status BIT(1) NOT NULL,
+                                stock INT(11) NOT NULL,
+                                unit_price DOUBLE NOT NULL,
+                                unit_id BIGINT(20) DEFAULT NULL,
+                                product_id BIGINT(20) DEFAULT NULL,
+                                FOREIGN KEY (unit_id) REFERENCES unit(id),
+                                FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+
+CREATE TABLE orders (
+                        id BIGINT(20) NOT NULL PRIMARY KEY,
+                        created_at DATE DEFAULT NULL,
+                        district VARCHAR(255) DEFAULT NULL,
+                        note VARCHAR(255) DEFAULT NULL,
+                        phone VARCHAR(255) DEFAULT NULL,
+                        province VARCHAR(255) DEFAULT NULL,
+                        receive_at DATE DEFAULT NULL,
+                        receive_name VARCHAR(255) DEFAULT NULL,
+                        serial_number VARCHAR(255) DEFAULT NULL,
+                        status varchar(50) DEFAULT NULL,
+                        street_address VARCHAR(255) DEFAULT NULL,
+                        total_discounted_price DOUBLE NOT NULL,
+                        total_price DOUBLE NOT NULL,
+                        total_price_after_coupons DOUBLE NOT NULL,
+                        ward VARCHAR(255) DEFAULT NULL,
+                        coupons_id BIGINT(20) DEFAULT NULL,
+                        user_id BIGINT(20) DEFAULT NULL,
+                        FOREIGN KEY (coupons_id) REFERENCES coupons(id),
+                        FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE order_detail (
+                              orders_id BIGINT(20) NOT NULL,
+                              product_detail_id BIGINT(20) NOT NULL,
+                              oder_quantity INT(11) NOT NULL,
+                              order_detail_name VARCHAR(255) DEFAULT NULL,
+                              unit_price DOUBLE NOT NULL,
+                              PRIMARY KEY (orders_id, product_detail_id),
+                              FOREIGN KEY (orders_id) REFERENCES orders(id),
+                              FOREIGN KEY (product_detail_id) REFERENCES product_detail(id)
+);
+
+CREATE TABLE comment (
+                         id BIGINT(20) NOT NULL PRIMARY KEY,
+                         comment VARCHAR(255) DEFAULT NULL,
+                         created_at DATETIME(6) DEFAULT NULL,
+                         status BIT(1) NOT NULL,
+                         product_id BIGINT(20) DEFAULT NULL,
+                         user_id BIGINT(20) DEFAULT NULL,
+                         FOREIGN KEY (product_id) REFERENCES product(id),
+                         FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE comment_detail (
+                                id BIGINT(20) NOT NULL PRIMARY KEY,
+                                created_at DATETIME(6) DEFAULT NULL,
+                                review VARCHAR(255) DEFAULT NULL,
+                                status BIT(1) NOT NULL,
+                                comment_id BIGINT(20) DEFAULT NULL,
+                                user_id BIGINT(20) DEFAULT NULL,
+                                FOREIGN KEY (comment_id) REFERENCES comment(id),
+                                FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+
+CREATE TABLE image (
+                       id BIGINT(20) NOT NULL PRIMARY KEY,
+                       src VARCHAR(255) DEFAULT NULL,
+                       product BIGINT(20) DEFAULT NULL,
+                       FOREIGN KEY (product) REFERENCES product(id)
+);
+
+CREATE TABLE config (
+                        id BIGINT(20) NOT NULL PRIMARY KEY,
+                        config_name VARCHAR(255) DEFAULT NULL,
+                        status BIT(1) NOT NULL,
+                        product_detail_id BIGINT(20) DEFAULT NULL,
+                        FOREIGN KEY (product_detail_id) REFERENCES product_detail(id)
+);
+
+CREATE TABLE review (
+                        id BIGINT(20) NOT NULL PRIMARY KEY,
+                        comments VARCHAR(255) DEFAULT NULL,
+                        created_at DATE DEFAULT NULL,
+                        rating INT(11) NOT NULL,
+                        status TINYINT(1) DEFAULT 0,
+                        product_detail_id BIGINT(20) NOT NULL,
+                        FOREIGN KEY (product_detail_id) REFERENCES product_detail(id)
+);
+
+
+
+
+CREATE TABLE shopping_cart (
+                               id BIGINT(20) NOT NULL PRIMARY KEY,
+                               order_quantity INT(11) NOT NULL,
+                               product_detail_id BIGINT(20) DEFAULT NULL,
+                               user_id BIGINT(20) DEFAULT NULL,
+                               FOREIGN KEY (product_detail_id) REFERENCES product_detail(id),
+                               FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+
+CREATE TABLE wish_list (
+                           id BIGINT(20) NOT NULL PRIMARY KEY,
+                           created_at DATE DEFAULT NULL,
+                           product_id BIGINT(20) DEFAULT NULL,
+                           user_id BIGINT(20) DEFAULT NULL,
+                           FOREIGN KEY (product_id) REFERENCES product(id),
+                           FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+
