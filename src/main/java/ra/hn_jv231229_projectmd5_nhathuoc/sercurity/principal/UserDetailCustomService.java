@@ -29,7 +29,6 @@ public class UserDetailCustomService implements UserDetailsService {
                     .phone(user.getPhone())
                     .createdAt(user.getCreatedAt())
                     .updatedAt(user.getUpdatedAt())
-                    .fullName(user.getFullName())
                     .status(user.getStatus())
                     .point(user.getPoint())
                     .avatar(user.getAvatar())

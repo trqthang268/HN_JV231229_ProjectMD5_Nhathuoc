@@ -90,7 +90,7 @@ public class AuthServiceImpl implements IAuthService {
         }
         User user = User.builder()
                 .phone(registerRequest.getPhoneNumber())
-                .fullName(registerRequest.getFullName())
+
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(roles)
                 .status(true)
