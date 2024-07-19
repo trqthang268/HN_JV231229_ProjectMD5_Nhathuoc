@@ -1,5 +1,6 @@
 package ra.hn_jv231229_projectmd5_nhathuoc.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.constants.OrderStatus;
@@ -19,6 +20,8 @@ public class Orders {
     private Long id;
 
     @Column(name = "created_at")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
 
     private String district;
@@ -27,6 +30,8 @@ public class Orders {
     private String province;
 
     @Column(name = "receive_at")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date receiveAt;
 
     @Column(name = "receive_name")
