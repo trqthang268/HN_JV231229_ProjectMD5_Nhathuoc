@@ -1,4 +1,5 @@
 package ra.hn_jv231229_projectmd5_nhathuoc.model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,8 @@ public class Review {
     private String comments;
 
     @Column(name = "created_at")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
 
     private Integer rating;

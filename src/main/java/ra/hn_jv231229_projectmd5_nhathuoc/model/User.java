@@ -1,5 +1,6 @@
 package ra.hn_jv231229_projectmd5_nhathuoc.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,8 @@ public class User {
     private Long id;
     private String avatar;
     @Column(name = "created_at")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
     private String email;
     @Column(name = "is_deleted")
@@ -28,6 +31,8 @@ public class User {
     private Double point;
     private Boolean status;
     @Column(name = "updated_at")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date updatedAt;
     private String username;
     @ManyToMany(fetch = FetchType.EAGER)
