@@ -23,4 +23,5 @@ public interface IUserRepository extends JpaRepository<User, Long> , PagingAndSo
     boolean existsByUsername(String username);
     boolean existsByPhone(String phone);
     Page<User> findAllByUsernameContains(String name, Pageable pageable);
+    User findByPhone(String phone);
 }

@@ -18,7 +18,7 @@ public class JwtProvider {
 
     public String generateToken(UserDetailCustom userDetail) {
         return Jwts.builder()
-                .setSubject(userDetail.getUsername())
+                .setSubject(userDetail.getPhone())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+EXPIRATION))
                 .signWith(SignatureAlgorithm.HS384,SECRET_KEY)
