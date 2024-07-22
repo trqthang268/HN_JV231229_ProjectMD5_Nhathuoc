@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class UserService implements IUserService {
+    //tìm kiếm, sắp xếp và phân trang Quản lý User
     @Autowired
     IUserRepository userRepository;
     @Override
@@ -24,14 +25,14 @@ public class UserService implements IUserService {
         }
         return users;
     }
-
+//Tìm kiếm User
     @Override
     public List<User> findByName(String search) {
         User user = userRepository.findUserByUsername(search)
                 .orElseThrow(() -> new RuntimeException("không tìm thấy user này"));
         return List.of(user);
     }
-
+//Khóa mở
     @Override
     public Boolean LockUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -45,5 +46,9 @@ public class UserService implements IUserService {
         return true;
     }
 
-
+    @Override
+    public Boolean findByPhone(String phone) {
+      User user =   userRepository.findByPhone(phone);
+        return user != null;
+    }
 }

@@ -46,7 +46,7 @@ public class AuthServiceImpl implements IAuthService {
                             loginRequest.getPhoneNumber(),loginRequest.getPassword()
                     ));
         }catch (AuthenticationException e) {
-            throw new CustomException("Invalid phone number or password", HttpStatus.UNAUTHORIZED);
+            throw new BadCredentialsException("Wrong phone number or password");
         }
         UserDetailCustom userDetailCustom = (UserDetailCustom) authentication.getPrincipal();
         String token = jwtProvider.generateToken(userDetailCustom);

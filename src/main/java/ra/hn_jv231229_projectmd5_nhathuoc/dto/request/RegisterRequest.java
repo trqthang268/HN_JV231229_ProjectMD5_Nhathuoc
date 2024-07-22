@@ -15,15 +15,13 @@ import java.util.Set;
 public class RegisterRequest {
     @NotBlank(message = "Không được để trống tên")
     private String username;
-    @NotBlank(message = "Không được để trống Số điện thoại")
-//    @PhoneExist
+    @NotBlank(message = "Không được để trống Số điện thoại")//    @PhoneExist
     @Pattern(regexp = "^([+]84|0)[35789][0-9]{8,9}$" ,message = "Invalid phone format!")
     private String phoneNumber;
     @NotBlank(message = "Không được để trống mật khẩu")
     private String password;
     @NotBlank(message = "Không được để trống xác nhận mật khẩu")
     private String confirmPassword;
-
     private Set<String> roles ;
 
 }

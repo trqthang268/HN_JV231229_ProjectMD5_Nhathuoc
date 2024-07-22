@@ -10,13 +10,10 @@ import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
 import ra.hn_jv231229_projectmd5_nhathuoc.exception.DataExistException;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.ICategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 
@@ -89,9 +86,9 @@ public class AdminController {
                 .build(),HttpStatus.NO_CONTENT);
     }
 
-
-
-
+/**
+ * tìm kiếm, sắp xếp, phân trang user
+ * */
     @GetMapping("/getuser")
     public ResponseEntity<Page<User>> findAll(
             @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
@@ -100,11 +97,21 @@ public class AdminController {
 
         return ResponseEntity.ok().body(userService.findAll(pageable, search));
     }
+
+    /**
+     * tìm kiếm user
+     **/
     @GetMapping("/searchUser")
     public ResponseEntity<?> searchUser(@RequestParam String search) {
+        if(search == null || search.isEmpty()) {
+            return  ResponseEntity.ok().body(userService.findAll(PageRequest.of(0, 10, Sort.Direction.ASC, "id"),""));
+        }
         return new ResponseEntity<>( userService.findByName(search), HttpStatus.OK);
     }
 
+    /**
+     * khóa, mở khóa user
+     * */
     @PutMapping("/lockUser")
     public ResponseEntity<?> lockUser(@RequestParam Long id) {
        Boolean isLock = userService.LockUser(id);
