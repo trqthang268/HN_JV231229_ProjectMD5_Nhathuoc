@@ -49,9 +49,9 @@ public class SecurityConfig {
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        url->url.requestMatchers("/api.myservice.com/v1/admin/**").hasAuthority(RoleName.ROLE_ADMIN.name())
-                                .requestMatchers("/api.myservice.com/v1/manager/**").hasAuthority(RoleName.ROLE_MANAGER.name())
-                                .requestMatchers("/api.myservice.com/v1/user/**").hasAuthority(RoleName.ROLE_USER.name())
+                        url->url.requestMatchers("/api/v2/admin/**").hasAuthority(RoleName.ROLE_ADMIN.name())
+                                .requestMatchers("/api/v2/manager/**").hasAuthority(RoleName.ROLE_MANAGER.name())
+                                .requestMatchers("/api/v2/user/**").hasAuthority(RoleName.ROLE_USER.name())
                                 .anyRequest().permitAll()
                 ).authenticationProvider(authenticationProvider())
                 .exceptionHandling(

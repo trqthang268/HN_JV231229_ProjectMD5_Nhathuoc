@@ -18,7 +18,7 @@ public class JwtProvider {
 
     public String generateToken(UserDetailCustom userDetail) {
         return Jwts.builder()
-                .setSubject(userDetail.getUsername())
+                .setSubject(userDetail.getPhone())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+EXPIRATION))
                 .signWith(SignatureAlgorithm.HS384,SECRET_KEY)
@@ -43,7 +43,7 @@ public class JwtProvider {
         return false;
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getPhoneFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 }

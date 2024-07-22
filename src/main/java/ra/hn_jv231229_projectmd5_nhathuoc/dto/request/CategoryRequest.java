@@ -3,6 +3,7 @@ package ra.hn_jv231229_projectmd5_nhathuoc.dto.request;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -14,8 +15,8 @@ import java.util.Date;
 public class CategoryRequest {
     @NotBlank(message = "Category name must not be blanked")
     private String categoryName;
-    private Date createdAt;
+    private Date createdAt = new Date();
     private String description;
-    private String image;
+    private MultipartFile image;
     private Boolean status = true;
 }

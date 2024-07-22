@@ -1,6 +1,7 @@
 package ra.hn_jv231229_projectmd5_nhathuoc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements IAuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public JwtResponse login(LoginRequest loginRequest) {
+    public JwtResponse login(LoginRequest loginRequest) throws CustomException {
         Authentication authentication;
         try {
             authentication = authenticationManager
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements IAuthService {
                             loginRequest.getPhoneNumber(),loginRequest.getPassword()
                     ));
         }catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid phone number or password");
+            throw new CustomException("Invalid phone number or password", HttpStatus.UNAUTHORIZED);
         }
         UserDetailCustom userDetailCustom = (UserDetailCustom) authentication.getPrincipal();
         String token = jwtProvider.generateToken(userDetailCustom);
@@ -89,8 +90,8 @@ public class AuthServiceImpl implements IAuthService {
             });
         }
         User user = User.builder()
+                .username(registerRequest.getUsername())
                 .phone(registerRequest.getPhoneNumber())
-
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(roles)
                 .status(true)

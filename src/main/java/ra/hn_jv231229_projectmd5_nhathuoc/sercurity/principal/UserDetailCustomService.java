@@ -18,8 +18,8 @@ public class UserDetailCustomService implements UserDetailsService {
     private IUserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findUserByUsername(username);
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findUserByPhone(phone);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             return UserDetailCustom.builder()
@@ -27,6 +27,7 @@ public class UserDetailCustomService implements UserDetailsService {
                     .username(user.getUsername())
                     .email(user.getEmail())
                     .phone(user.getPhone())
+                    .password(user.getPassword())
                     .createdAt(user.getCreatedAt())
                     .updatedAt(user.getUpdatedAt())
                     .status(user.getStatus())
