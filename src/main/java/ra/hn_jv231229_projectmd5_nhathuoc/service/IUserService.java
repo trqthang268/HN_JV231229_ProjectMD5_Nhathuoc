@@ -10,4 +10,5 @@ public interface IUserService {
     Page<User> findAll(Pageable pageable, String search);
     List<User> findByName(String search);
     Boolean LockUser(Long id);
+    Boolean findByPhone(String phone);
 }
