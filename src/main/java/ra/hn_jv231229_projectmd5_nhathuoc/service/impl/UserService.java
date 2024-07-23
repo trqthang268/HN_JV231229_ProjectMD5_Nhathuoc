@@ -8,7 +8,9 @@ import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
 import ra.hn_jv231229_projectmd5_nhathuoc.repository.IUserRepository;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IUserService;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
@@ -50,5 +52,21 @@ public class UserService implements IUserService {
     public Boolean findByPhone(String phone) {
       User user =   userRepository.findByPhone(phone);
         return user != null;
+    }
+
+    @Override
+    public User updateUser(User user) {
+        // Find the existing user in the repository based on the phone number
+        User updateUser = userRepository.findByPhone(user.getPhone());
+        Date date = new Date();
+        // Update the existing user's properties
+        updateUser.setEmail(user.getEmail());
+        updateUser.setAvatar(user.getAvatar());
+        updateUser.setBirthDate(user.getBirthDate());
+        updateUser.setUsername(user.getUsername());
+        updateUser.setGender(user.getGender());
+        updateUser.setUpdatedAt(date);
+        // Save the updated user to the repository and return the saved user
+        return userRepository.save(updateUser);
     }
 }

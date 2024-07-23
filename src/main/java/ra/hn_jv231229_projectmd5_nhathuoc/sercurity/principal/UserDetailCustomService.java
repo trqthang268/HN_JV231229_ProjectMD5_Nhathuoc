@@ -33,6 +33,8 @@ public class UserDetailCustomService implements UserDetailsService {
                     .status(user.getStatus())
                     .point(user.getPoint())
                     .avatar(user.getAvatar())
+                    .birthDate(user.getBirthDate())
+                    .gender(user.getGender())
                     .isDeleted(user.getIsDeleted())
                     .authorities(
                             user.getRoles().stream()

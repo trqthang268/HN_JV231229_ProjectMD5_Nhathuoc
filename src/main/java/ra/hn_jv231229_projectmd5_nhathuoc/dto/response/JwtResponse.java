@@ -21,6 +21,8 @@ public class JwtResponse {
     private String fullName;
     private Boolean isDeleted;
     private String phone;
+    private Date birthDate;
+    private Byte gender;
     private Double point;
     private Boolean status;
     @JsonFormat(pattern = "dd-MM-yyyy")

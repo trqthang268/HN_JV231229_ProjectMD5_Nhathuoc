@@ -52,7 +52,6 @@ public class SecurityConfig {
                         url->url.requestMatchers("/api/v2/admin/**").hasAuthority(RoleName.ROLE_ADMIN.name())
                                 .requestMatchers("/api/v2/manager/**").hasAuthority(RoleName.ROLE_MANAGER.name())
                                 .requestMatchers("/api/v2/user/**").hasAuthority(RoleName.ROLE_USER.name())
-
                                 .anyRequest().permitAll()
                 ).authenticationProvider(authenticationProvider())
                 .exceptionHandling(

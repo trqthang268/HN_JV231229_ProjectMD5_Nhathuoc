@@ -29,11 +29,16 @@ public class User {
     private String password;
     private String phone;
     private Double point;
+    private Byte Gender;
     private Boolean status;
     @Column(name = "updated_at")
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date updatedAt;
+    @Column(name = "birthDate")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date birthDate;
     private String username;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
