@@ -53,6 +53,8 @@ public class AuthServiceImpl implements IAuthService {
                 .token(token)
                 .username(userDetailCustom.getUsername())
                 .fullName(userDetailCustom.getFullName())
+                .birthDate(userDetailCustom.getBirthDate())
+                .gender(userDetailCustom.getGender())
                 .email(userDetailCustom.getEmail())
                 .phone(userDetailCustom.getPhone())
                 .status(userDetailCustom.getStatus())

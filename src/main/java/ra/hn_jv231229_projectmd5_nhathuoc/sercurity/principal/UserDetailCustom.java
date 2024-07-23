@@ -25,6 +25,8 @@ public class UserDetailCustom implements UserDetails {
     private Double point;
     private Boolean status;
     private Date updatedAt;
+    private Date birthDate;
+    private Byte gender;
     private String username;
     private Collection<? extends GrantedAuthority> authorities;
 

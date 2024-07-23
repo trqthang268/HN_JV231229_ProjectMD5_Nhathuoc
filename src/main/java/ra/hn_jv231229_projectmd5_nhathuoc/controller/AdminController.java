@@ -88,7 +88,6 @@ public class AdminController {
             @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(defaultValue = "") String search
     ) {
-
         return ResponseEntity.ok().body(userService.findAll(pageable, search));
     }
 

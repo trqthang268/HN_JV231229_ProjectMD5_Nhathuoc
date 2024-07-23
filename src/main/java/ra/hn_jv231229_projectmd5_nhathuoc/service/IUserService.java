@@ -5,10 +5,12 @@ import org.springframework.data.domain.Pageable;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
     Page<User> findAll(Pageable pageable, String search);
     List<User> findByName(String search);
     Boolean LockUser(Long id);
     Boolean findByPhone(String phone);
+    User updateUser(User user);
 }
