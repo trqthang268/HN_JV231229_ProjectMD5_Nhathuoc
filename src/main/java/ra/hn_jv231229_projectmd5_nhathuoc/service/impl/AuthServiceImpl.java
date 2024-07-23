@@ -1,6 +1,7 @@
 package ra.hn_jv231229_projectmd5_nhathuoc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements IAuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public JwtResponse login(LoginRequest loginRequest) {
+    public JwtResponse login(LoginRequest loginRequest) throws CustomException {
         Authentication authentication;
         try {
             authentication = authenticationManager
