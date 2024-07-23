@@ -10,6 +10,7 @@ import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.LoginRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.RegisterRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.JwtResponse;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
+import ra.hn_jv231229_projectmd5_nhathuoc.exception.CustomException;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IAuthService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 
@@ -30,7 +31,7 @@ UserService userService;
     }
 
     @PostMapping("login")
-    public ResponseEntity<?> handleLogin(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> handleLogin(@Valid @RequestBody LoginRequest loginRequest) throws CustomException {
         JwtResponse jwtResponse = authService.login(loginRequest);
         return new ResponseEntity<>(ResponseWrapper.builder()
                 .statusCode(HttpStatus.OK.value())

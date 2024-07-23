@@ -43,7 +43,7 @@ public class JwtProvider {
         return false;
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getPhoneFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 }
