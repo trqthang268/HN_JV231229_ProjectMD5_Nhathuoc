@@ -30,6 +30,7 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.findAll(pageable);
     }
 
+    //thêm mới sản phẩm
     @Override
     @Transactional
     public Product createProduct(ProductRequest productRequest) {

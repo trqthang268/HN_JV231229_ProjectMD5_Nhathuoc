@@ -10,6 +10,7 @@ import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
 import ra.hn_jv231229_projectmd5_nhathuoc.exception.DataExistException;
+import ra.hn_jv231229_projectmd5_nhathuoc.service.IBrandService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.ICategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class AdminController {
     private final ICategoryService categoryService;
     private final IProductService productService;
     private final UserService userService;
+    private final IBrandService brandService;
 
     /**
      * CATEGORY MANAGEMENT
@@ -46,6 +48,37 @@ public class AdminController {
                 .httpStatus(HttpStatus.OK)
                 .data(categoryService.findAllCategory(pageable))
                 .statusCode(HttpStatus.OK.value()).build(),HttpStatus.OK);
+    }
+
+    //Hàm lấy toàn bộ category không phân trang
+    @GetMapping("/categories")
+    public ResponseEntity<?> getAllCategories(){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(categoryService.getAllCategory())
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
+    //Hàm lấy catrgory theo id
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getCategory(@PathVariable Long categoryId){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(categoryService.findCategoryById(categoryId))
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
+    //hàm lấy toàn bộ brands
+    @GetMapping("/brands")
+    public ResponseEntity<?> getAllBrands(){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(brandService.getAllBrands())
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
     }
 
     /**
@@ -118,6 +151,11 @@ public class AdminController {
                 .statusCode(HttpStatus.OK.value()).build(),HttpStatus.OK);
     }
 
+    /**
+     * thêm mới sản phẩm feature-8981
+     * @param productRequest thông tin product cần gửi để tạo mới
+     * @return trả về sản phẩm mới được thêm
+     */
     @PostMapping("/addProduct")
     public ResponseEntity<?> addProduct(@Valid @ModelAttribute ProductRequest productRequest) {
         return new ResponseEntity<>(ResponseWrapper.builder()
