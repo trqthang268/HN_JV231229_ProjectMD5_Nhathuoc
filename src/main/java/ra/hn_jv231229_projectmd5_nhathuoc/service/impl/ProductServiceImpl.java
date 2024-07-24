@@ -130,4 +130,12 @@ public class ProductServiceImpl implements IProductService {
 
         return product;
     }
+
+    @Override
+    public Product changeStatusProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoSuchElementException("Product Not Found"));
+        product.setStatus(!product.getStatus());
+        return productRepository.save(product);
+    }
 }
