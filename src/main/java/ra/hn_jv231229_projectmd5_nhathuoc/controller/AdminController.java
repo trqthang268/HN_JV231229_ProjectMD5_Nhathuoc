@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
+import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductUpdateRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
 import ra.hn_jv231229_projectmd5_nhathuoc.exception.DataExistException;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IBrandService;
@@ -163,6 +164,21 @@ public class AdminController {
                 .statusCode(HttpStatus.CREATED.value())
                 .data(productService.createProduct(productRequest))
                 .build(),HttpStatus.CREATED);
+    }
+
+    /**
+     * chỉnh sửa sản phẩm feature-8982
+     * @param productId id của product cũ
+     * @param productUpdateRequest thông tin mới được gửi lên để chỉnh sửa
+     * @return trả về sản phẩm mới được chỉnh sửa
+     */
+    @PutMapping("/product/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long productId, @Valid @ModelAttribute ProductUpdateRequest productUpdateRequest) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.updateProduct(productId,productUpdateRequest))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
     }
 
     /**
