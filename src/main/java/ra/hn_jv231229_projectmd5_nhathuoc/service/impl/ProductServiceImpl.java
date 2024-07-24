@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
+import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductUpdateRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.repository.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductService;
@@ -83,6 +84,49 @@ public class ProductServiceImpl implements IProductService {
             image.setProduct(product);
             imageRepository.save(image);
         }
+
+        return product;
+    }
+
+    //update sản phẩm
+    @Override
+    @Transactional
+    public Product updateProduct(Long productId, ProductUpdateRequest productUpdateRequest) {
+        // Tìm sản phẩm hiện có trong cơ sở dữ liệu
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoSuchElementException("Product Not Found"));
+
+        // Cập nhật thông tin sản phẩm từ ProductUpdateRequest
+        if (productUpdateRequest.getProductName() != null) {
+            product.setProductName(productUpdateRequest.getProductName());
+        }
+        if (productUpdateRequest.getDescription() != null) {
+            product.setDescription(productUpdateRequest.getDescription());
+        }
+        product.setUpdatedAt(productUpdateRequest.getUpdatedAt());
+        if (productUpdateRequest.getStatus() != null){
+            product.setStatus(productUpdateRequest.getStatus());
+        }
+        if (productUpdateRequest.getImage() != null) {
+            product.setImage(uploadService.uploadFileToServer(productUpdateRequest.getImage()));
+        }
+
+        if (productUpdateRequest.getBrandId()!=null){
+            // Cập nhật hoặc thêm Brand
+            Brand brand = brandRepository.findById(productUpdateRequest.getBrandId())
+                    .orElseThrow(() -> new NoSuchElementException("Brand Not Found"));
+            product.setBrand(brand);
+        }
+
+        if (productUpdateRequest.getCategoryId()!=null){
+            // Cập nhật hoặc thêm Category
+            Category category = categoryRepository.findById(productUpdateRequest.getCategoryId())
+                    .orElseThrow(() -> new NoSuchElementException("Category Not Found"));
+            product.setCategory(category);
+        }
+
+        // Lưu sản phẩm đã cập nhật
+        product = productRepository.save(product);
 
         return product;
     }
