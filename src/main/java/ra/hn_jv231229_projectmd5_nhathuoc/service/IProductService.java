@@ -8,6 +8,8 @@ import ra.hn_jv231229_projectmd5_nhathuoc.model.Product;
 
 public interface IProductService {
     Page<Product> findAllProduct(Pageable pageable);
+    Page<Product> findAllByProductName(Pageable pageable, String productName);
+    Page<Product> findProductsByCategoryId(Pageable pageable, Long categoryId);
     Product createProduct(ProductRequest productRequest);
     Product updateProduct(Long productId, ProductUpdateRequest productRequest);
     Product changeStatusProduct(Long productId);
