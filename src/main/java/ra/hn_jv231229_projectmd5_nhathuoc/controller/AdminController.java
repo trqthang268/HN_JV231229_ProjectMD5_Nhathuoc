@@ -10,7 +10,9 @@ import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductUpdateRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
+import ra.hn_jv231229_projectmd5_nhathuoc.exception.CustomException;
 import ra.hn_jv231229_projectmd5_nhathuoc.exception.DataExistException;
+import ra.hn_jv231229_projectmd5_nhathuoc.model.ProductDetail;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IBrandService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.ICategoryService;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
+import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductDetailService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 
@@ -29,6 +32,7 @@ public class AdminController {
     private final IProductService productService;
     private final UserService userService;
     private final IBrandService brandService;
+    private final IProductDetailService productDetailService;
 
     /**
      * CATEGORY MANAGEMENT
@@ -243,6 +247,37 @@ public class AdminController {
                 .build(),HttpStatus.OK);
     }
 
+    /**
+     * feature-9041 chính sửa stock sản phẩm
+     * @param productId Id của sản phẩm
+     * @param newStock stock mới của sản phẩm
+     * @return trả về chi tiết sản phẩm mới
+     * @throws CustomException trả về lỗi khi stock mới nhỏ hơn 0
+     */
+    @PutMapping("/stock/{productId}")
+    public ResponseEntity<?> changeStockProduct(@PathVariable Long productId,
+                                                @RequestParam Integer newStock) throws CustomException {
+        ProductDetail productDetail = productDetailService.updateStock(productId,newStock);
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(productDetail)
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
+
+    /**
+     * lấy ra prodyct detail theo productId
+     * @param productId id sản phẩm
+     * @return trả về thông tin chi tiết sản phẩm
+     */
+    @GetMapping("product-detail/{productId}")
+    public ResponseEntity<?> getProductDetail(@PathVariable Long productId) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(productDetailService.findProductDetailByProductId(productId))
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
 
     /**
      * USER MANAGEMENT
