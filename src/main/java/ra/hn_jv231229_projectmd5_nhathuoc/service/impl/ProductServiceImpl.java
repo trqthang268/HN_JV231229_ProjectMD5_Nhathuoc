@@ -26,9 +26,30 @@ public class ProductServiceImpl implements IProductService {
     private final IUnitRepository unitRepository;
     private final UploadService uploadService;
 
+    //phân trang sản phẩm
     @Override
     public Page<Product> findAllProduct(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    //tìm kiếm sản phẩm
+    @Override
+    public Page<Product> findAllByProductName(Pageable pageable, String productName) {
+        if(productName == null || productName.isEmpty()){
+            return productRepository.findAll(pageable);
+        }else{
+            return productRepository.findAllByProductName(productName,pageable);
+        }
+    }
+
+    //tìm danh sách product thep category
+    @Override
+    public Page<Product> findProductsByCategoryId(Pageable pageable, Long categoryId) {
+        if(categoryId == null){
+            return productRepository.findAll(pageable);
+        }else {
+            return productRepository.findProductsByCategoryId(pageable,categoryId);
+        }
     }
 
     //thêm mới sản phẩm
