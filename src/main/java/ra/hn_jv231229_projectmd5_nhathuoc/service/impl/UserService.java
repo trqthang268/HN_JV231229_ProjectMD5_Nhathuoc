@@ -3,9 +3,13 @@ package ra.hn_jv231229_projectmd5_nhathuoc.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ra.hn_jv231229_projectmd5_nhathuoc.model.Product;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
+import ra.hn_jv231229_projectmd5_nhathuoc.model.WishList;
 import ra.hn_jv231229_projectmd5_nhathuoc.repository.IUserRepository;
+import ra.hn_jv231229_projectmd5_nhathuoc.repository.IWishListRepository;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IUserService;
 
 import java.util.Date;
@@ -17,6 +21,10 @@ public class UserService implements IUserService {
     //tìm kiếm, sắp xếp và phân trang Quản lý User
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    IWishListRepository wishListRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public Page<User> findAll(Pageable pageable, String search) {
         Page<User> users;
@@ -69,4 +77,37 @@ public class UserService implements IUserService {
         // Save the updated user to the repository and return the saved user
         return userRepository.save(updateUser);
     }
+
+    @Override
+    public User changePassword(String phone, String oldPassword, String newPassword) {
+        User updateUser = userRepository.findByPhone(phone);
+        if( passwordEncoder.matches(oldPassword,updateUser.getPassword())) {
+            updateUser.setPassword(newPassword);
+            return userRepository.save(updateUser);
+        }else{
+            throw new RuntimeException("Sai mật khẩu");
+        }
+
+    }
+
+    @Override
+    public WishList addToWishList(Long id, String phone) {
+        WishList wishList = WishList.builder().id(id).user(userRepository.findByPhone(phone)).createdAt(new Date()).product(null).build();
+        return wishListRepository.save(wishList);
+    }
+
+    @Override
+    public Page<WishList> getFromWishList(Pageable pageable) {
+        Page<WishList> wishLists;
+            wishLists = wishListRepository.findAll(pageable);
+        return wishLists;
+    }
+
+
+    @Override
+    public void deleteFromWishList(Integer id) {
+        // Delete the wish list item
+        wishListRepository.delete(wishListRepository.findById(id).orElse(null));
+    }
+
 }
