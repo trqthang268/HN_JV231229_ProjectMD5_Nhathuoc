@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.BannerRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductUpdateRequest;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductDetailService;
+import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.BannerServiceImpl;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 
@@ -31,8 +33,10 @@ public class AdminController {
     private final ICategoryService categoryService;
     private final IProductService productService;
     private final UserService userService;
+    private final BannerServiceImpl bannerService;
     private final IBrandService brandService;
     private final IProductDetailService productDetailService;
+
 
     /**
      * CATEGORY MANAGEMENT
@@ -315,5 +319,32 @@ public class AdminController {
        }
        return new ResponseEntity<>("Fail",HttpStatus.OK);
     }
+
+
+    /***
+     *
+     * add banner
+     */
+    @PostMapping("/banner")
+    public ResponseEntity<?> addBanner(@Valid @ModelAttribute BannerRequest bannerRequest) {
+        return new ResponseEntity<>(bannerService.addBanner(bannerRequest),HttpStatus.OK);
+    }
+    /***
+     *
+     * get banner
+     */
+    @GetMapping("/banner")
+    public ResponseEntity<?> getBanner( ) {
+        return new ResponseEntity<>(bannerService.getBanners(),HttpStatus.OK);
+    }
+    /***
+     *
+     * change status banner
+     */
+    @PutMapping("/banner")
+    public ResponseEntity<?> setStatusBanner(@RequestParam Integer id ) {
+        return new ResponseEntity<>(bannerService.updateBanner(id),HttpStatus.OK);
+    }
+
 
 }
