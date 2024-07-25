@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+import ra.hn_jv231229_projectmd5_nhathuoc.validation.annotation.CategoryNameExist;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 @Setter
 @Builder
 public class CategoryRequest {
+    @CategoryNameExist
     @NotBlank(message = "Category name must not be blanked")
     private String categoryName;
     private Date createdAt = new Date();

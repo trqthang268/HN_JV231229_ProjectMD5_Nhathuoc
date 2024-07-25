@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.Category;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long>, PagingAndSortingRepository<Category, Long> {
     boolean existsByCategoryName(String categoryName);
+    Optional<Category> findCategoryByCategoryName(String categoryName);
 }

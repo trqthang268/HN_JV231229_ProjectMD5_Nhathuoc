@@ -8,15 +8,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.BannerRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.CategoryRequest;
+import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductRequest;
+import ra.hn_jv231229_projectmd5_nhathuoc.dto.request.ProductUpdateRequest;
 import ra.hn_jv231229_projectmd5_nhathuoc.dto.response.ResponseWrapper;
 import ra.hn_jv231229_projectmd5_nhathuoc.exception.DataExistException;
+import ra.hn_jv231229_projectmd5_nhathuoc.service.IBrandService;
 import ra.hn_jv231229_projectmd5_nhathuoc.service.ICategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import ra.hn_jv231229_projectmd5_nhathuoc.model.User;
+
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.BannerServiceImpl;
+
+import ra.hn_jv231229_projectmd5_nhathuoc.service.IProductService;
+
 import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 
 @RestController
@@ -24,9 +31,17 @@ import ra.hn_jv231229_projectmd5_nhathuoc.service.impl.UserService;
 @RequiredArgsConstructor
 public class AdminController {
     private final ICategoryService categoryService;
+    private final IProductService productService;
     private final UserService userService;
+
     private final BannerServiceImpl bannerService;
 
+    private final IBrandService brandService;
+
+
+    /**
+     * CATEGORY MANAGEMENT
+     */
     /**
      * feature-8978: hiển thị danh sách danh mục
      * @apiNote lấy toàn bộ danh mục
@@ -43,6 +58,37 @@ public class AdminController {
                 .httpStatus(HttpStatus.OK)
                 .data(categoryService.findAllCategory(pageable))
                 .statusCode(HttpStatus.OK.value()).build(),HttpStatus.OK);
+    }
+
+    //Hàm lấy toàn bộ category không phân trang
+    @GetMapping("/categories")
+    public ResponseEntity<?> getAllCategories(){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(categoryService.getAllCategory())
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
+    //Hàm lấy catrgory theo id
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getCategory(@PathVariable Long categoryId){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(categoryService.findCategoryById(categoryId))
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
+    }
+    //hàm lấy toàn bộ brands
+    @GetMapping("/brands")
+    public ResponseEntity<?> getAllBrands(){
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .statusCode(HttpStatus.OK.value())
+                .data(brandService.getAllBrands())
+                .httpStatus(HttpStatus.OK)
+                .build(),HttpStatus.OK);
     }
 
     /**
@@ -88,8 +134,129 @@ public class AdminController {
                 .httpStatus(HttpStatus.NO_CONTENT)
                 .build(),HttpStatus.NO_CONTENT);
     }
+    /**
+     * PRODUCT MANAGEMENT
+     */
 
-/**
+    /**
+     * feature-8980-9039
+     * [ROLE_ADMIN] hiển thị danh sách sản phẩm + phân trang
+     * @param page trang hiẹn tại
+     * @param size số san pham 1 trang
+     * @param sortBy sap xep theo trường
+     * @param sortDir hướng sắp xếp
+     * @return
+     */
+    @GetMapping("/list-product")
+    public ResponseEntity<?> getAllProduct(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "2") int size,
+                                           @RequestParam(defaultValue = "id") String sortBy,
+                                           @RequestParam(defaultValue = "asc") String sortDir){
+        Sort.Direction direction = sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page,size, Sort.by(direction,sortBy));
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.findAllProduct(pageable))
+                .statusCode(HttpStatus.OK.value()).build(),HttpStatus.OK);
+    }
+
+    /**
+     * thêm mới sản phẩm feature-8981
+     * @param productRequest thông tin product cần gửi để tạo mới
+     * @return trả về sản phẩm mới được thêm
+     */
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProduct(@Valid @ModelAttribute ProductRequest productRequest) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.CREATED)
+                .statusCode(HttpStatus.CREATED.value())
+                .data(productService.createProduct(productRequest))
+                .build(),HttpStatus.CREATED);
+    }
+
+    /**
+     * chỉnh sửa sản phẩm feature-8982
+     * @param productId id của product cũ
+     * @param productUpdateRequest thông tin mới được gửi lên để chỉnh sửa
+     * @return trả về sản phẩm mới được chỉnh sửa
+     */
+    @PutMapping("/product/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long productId, @Valid @ModelAttribute ProductUpdateRequest productUpdateRequest) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.updateProduct(productId,productUpdateRequest))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
+    }
+
+    /**
+     * xoá sản phẩm(block-unblock product) : feature-9037
+     * @param productId id của sản phẩm cần block
+     * @return trả về sản phẩm được khóa hoặc được mở khóa
+     */
+    @PutMapping("/productStatus/{productId}")
+    public ResponseEntity<?> changeStatusProduct(@PathVariable Long productId) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.changeStatusProduct(productId))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
+    }
+
+    /**
+     * tìm kiếm sản phẩm : feature-9038
+     * @param searchPro Tên sản phẩm hoặc mô tả sản phẩm
+     * @param page số trang bắt đầu
+     * @param size số sản phẩm trong 1 trang
+     * @param sortBy sắp xếp theo trường nào
+     * @param sortDir hướng sắp xếp
+     * @return trả về danh sách có thông tin cần tìm kiếm
+     */
+    @GetMapping("/searchProduct")
+    public ResponseEntity<?> searchProduct(@RequestParam(defaultValue = "") String searchPro,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size,
+                                           @RequestParam(defaultValue = "id") String sortBy,
+                                           @RequestParam(defaultValue = "asc") String sortDir){
+        Sort.Direction direction = sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page,size, Sort.by(direction,sortBy));
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.findAllByProductName(pageable,searchPro))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
+    }
+
+    /**
+     * lọc sản phẩm theo Danh mục : feature-9040
+     * @param categoryId id danh mục cần lọc
+     * @param page số trang bắt đầu
+     * @param size số sản phẩm trong 1 trang
+     * @param sortBy sắp xếp theo trường nào
+     * @param sortDir hướng sắp xếp
+     * @return trả về danh sách sản phẩm trong danh mục
+     */
+    @GetMapping("/list-product-by-category/{categoryId}")
+    public ResponseEntity<?> getAllProduct(@PathVariable Long categoryId,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size,
+                                           @RequestParam(defaultValue = "id") String sortBy,
+                                           @RequestParam(defaultValue = "asc") String sortDir){
+        Sort.Direction direction = sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page,size, Sort.by(direction,sortBy));
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.findProductsByCategoryId(pageable,categoryId))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
+    }
+
+
+    /**
+     * USER MANAGEMENT
+     */
+    /**
  * tìm kiếm, sắp xếp, phân trang user
  * */
     @GetMapping("/getuser")
