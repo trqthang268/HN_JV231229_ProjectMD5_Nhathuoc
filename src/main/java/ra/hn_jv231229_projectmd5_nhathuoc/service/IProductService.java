@@ -10,4 +10,5 @@ public interface IProductService {
     Page<Product> findAllProduct(Pageable pageable);
     Product createProduct(ProductRequest productRequest);
     Product updateProduct(Long productId, ProductUpdateRequest productRequest);
+    Product changeStatusProduct(Long productId);
 }

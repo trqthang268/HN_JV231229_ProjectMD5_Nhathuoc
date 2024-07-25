@@ -182,6 +182,21 @@ public class AdminController {
     }
 
     /**
+     * xoá sản phẩm(block-unblock product) : feature-9037
+     * @param productId id của sản phẩm cần block
+     * @return trả về sản phẩm được khóa hoặc được mở khóa
+     */
+    @PutMapping("/productStatus/{productId}")
+    public ResponseEntity<?> changeStatusProduct(@PathVariable Long productId) {
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .httpStatus(HttpStatus.OK)
+                .data(productService.changeStatusProduct(productId))
+                .statusCode(HttpStatus.OK.value())
+                .build(),HttpStatus.OK);
+    }
+
+
+    /**
      * USER MANAGEMENT
      */
     /**
